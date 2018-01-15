@@ -1,0 +1,15 @@
+{
+    // copy this into the .vscode/ folder
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Profound.js",
+            "program": "${workspaceFolder}\\node_modules\\profoundjs\\setup\\start.js",
+            "args": [
+                "--no-worker"
+            ]
+        }
+    ]
+}
