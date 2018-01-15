@@ -6,7 +6,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Profound.js",
-            "program": "${workspaceFolder}\\node_modules\\profoundjs\\setup\\start.js",
+            "program": "${workspaceFolder}\\start.js",
             "args": [
                 "--no-worker"
             ]
