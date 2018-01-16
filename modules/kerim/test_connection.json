@@ -1,0 +1,12 @@
+{ "text": "", "formats": [{
+  "screen": { "record format name": "screen" },
+  "items": [
+    { "id": "Panel1", "field type": "panel", "value": "Panel Title", "left": "5px", "top": "5px", "width": "600px", "height": "600px", "panel style": "Simple", "z index": "8" }, 
+    { "id": "Label1", "field type": "output field", "css class": "label", "value": "Artikelnummer", "left": "15px", "top": "45px", "width": "150px" }, 
+    { "id": "TextBox1", "field type": "textbox", "css class": "input", "value": { "fieldName": "articleid", "dataLength": "30", "trimLeading": "false", "trimTrailing": "true", "blankFill": "false", "rjZeroFill": "false", "dataType": "char", "formatting": "Text", "textTransform": "none", "designValue": "[articleid]" }, "left": "205px", "top": "45px", "width": "360px", "choices database file": "ASSTAM00", "choice options field": "ASARNR, ASBEZ1", "onselect": "pui.click();" }, 
+    { "id": "TabPanel1", "field type": "tab panel", "left": "10px", "top": "70px", "width": "590px", "height": "475px", "tab names": "Grunddaten, Preise, Standort, Bestand", "z index": "8", "color": "#333366", "font family": "Arial", "font size": "12px", "tab panel style": "Glass" }, 
+    { "id": "StyledButton1", "field type": "styled button", "value": "Done", "left": "460px", "top": "565px", "width": "125px", "height": "23px", "button style": "Custom Button", "color": "#000000", "response": { "fieldName": "exit", "customTrue": "", "customFalse": "", "dataType": "indicator", "formatting": "Indicator", "indFormat": "1 / 0" } }, 
+    { "id": "Label2", "field type": "output field", "css class": "label", "value": "Bezeichnung", "left": "45px", "top": "115px", "width": "150px", "parent tab panel": "TabPanel1", "parent tab": "0" }, 
+    { "id": "OutputField1", "field type": "output field", "css class": "outputField", "value": { "fieldName": "ARTICL0001", "dataLength": "1030", "trimLeading": "false", "trimTrailing": "true", "blankFill": "false", "rjZeroFill": "false", "dataType": "char", "formatting": "Text", "textTransform": "none", "designValue": "[articledescription]", "longName": "articledescription" }, "left": "210px", "top": "115px", "parent tab panel": "TabPanel1", "parent tab": "0", "width": "170px", "visibility": { "fieldName": "DESCRI0001", "customTrue": "", "customFalse": "", "dataType": "indicator", "formatting": "Indicator", "indFormat": "visible / hidden", "longName": "descriptionvisible" } }
+  ]
+}], "keywords": [], "long name aliases": true }
