@@ -1,3 +1,5 @@
 node_modules
 .vscode
 credentials
+modules/ocr/*.jpg
+modules/ocr/*.png
