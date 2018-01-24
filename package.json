@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "profoundjs": "^4.2.2",
+    "profoundjs": "^4.2.3",
     "tesseract.js": "^1.0.10"
   }
 }
