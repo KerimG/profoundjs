@@ -1,0 +1,7 @@
+{ "text": "", "formats": [{
+  "screen": { "record format name": "screen" },
+  "items": [
+    { "id": "Panel1", "field type": "panel", "value": "Panel Title", "left": "0px", "top": "10px", "width": "545px", "height": "415px", "panel style": "Simple", "z index": "8" }, 
+    { "id": "FileUploadVog1", "field type": "file upload vog", "css class": "pui-file-upload", "left": "105px", "top": "85px", "width": "300px", "height": "252px", "custom target directory": { "fieldName": "targetdir", "dataLength": "300", "trimLeading": "false", "trimTrailing": "true", "blankFill": "false", "rjZeroFill": "false", "dataType": "char", "formatting": "Text", "textTransform": "none" } }
+  ]
+}], "keywords": [], "long name aliases": true }

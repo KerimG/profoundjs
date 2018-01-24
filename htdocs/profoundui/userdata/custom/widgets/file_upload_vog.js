@@ -1,151 +1,56 @@
-pui.fileUploadElements = [];
+//  Profound UI Runtime  -- A Javascript Framework for Rich Displays
+//  Copyright (c) 2017 Profound Logic Software, Inc.
+//
+//  This file is part of the Profound UI Runtime
+//
+//  The Profound UI Runtime is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  The Profound UI Runtime is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Lesser General Public License for more details.
+//
+//  You should have received a copy of the GNU Lesser General Public License
+//  In the COPYING and COPYING.LESSER files included with the Profound UI Runtime.
+//  If not, see <http://www.gnu.org/licenses/>.
 
-var context = "dspf";
+// pui["fileUpload"] is the old file_upload widget, so we use a
+// different string on window.pui to avoid overwriting the other widget's class.
+pui["fileUploadVog"] = {};
 
+var context = 'dspf';
 
-pui.widgets.add({
-    /* Field type name of the widget. Must match the "widget" property in designer/Toolbox.js. */
-    name: "file upload vog",
-    /* Prefix for the id property of a newly added file upload widget; e.g. "FileUploadDND1" becomes the id. */
-    newId: "FileUploadVOG",
-    /* Appears atop the Properties menu when a widget of this type is selected. */
-    menuName: "File Upload vog",
-    defaults: {
-        /* Default properties for a newly added widget of type "file upload vog". */
-        width: "300px",
-        height: "252px",
-        /* Use the same CSS as "file upload" widget. */
-        "css class": "pui-file-upload",
-        "size limit": "10",
-        "number of files": "1",
-        "overwrite files": "false"
-    },
-	/* Property-setter functions are called when the named property is set or
-	 * removed. Each are also called when the page loads or is refreshed ONLY IF
-	 * the property is set (unless noted otherwise below).
-	 * 
-	 * The parameter, parms.design, is true when the page is Visual Designer
-	 * and when design mode is On for Genie.
-	 * 
-	 * I put validation code in the setter functions instead of these handlers. MD.
-	 */
-    propertySetters: {
-        /* The "field type" function calls the widget constructor and render(). */
-        "field type": function (parms) {
-			/*
-			 * If we haven't already constructed an instance of FileUpload, do it now.
-			 * dom["fileUpload"] is a property of our mainBox, not of window.pui.
-			 * runtime/dspf/render.js requires a "fileUpload" property, so we must use the exact string.
-			 * pui["fileUpload"] is the old file_upload widget, so we use a
-			 * different string on window.pui to avoid overwriting the other widget's class.
-			 * 
-			 * .dom["fileUpload"] is undefined on a new page load or after pui.submitReponse();
-			 * i.e. in RichUI when screen/record-format changes.
-			 */
-            if (parms.dom["fileUpload"] === undefined) {
-                parms.dom["fileUpload"] = new pui["fileUploadVOG"].FileUpload(parms.dom);
+if (window.context) {
+    context = window.context;
+}
 
-                // This pushes our widget instance onto the global list of 
-                // file upload widgets. When a submit happens, each widget's
-                // upload() function will be called.
-                if (context === "dspf")
-                    pui.fileUploadElements.push(parms.dom["fileUpload"]);
-            }
-            // Process multiple occurence property.
-            var suffix = 1;
-            var prop = "allowed type";
-            var types = [];
-            while (typeof (parms.properties[prop]) === "string") {
-                types.push(parms.evalProperty(prop));
-                prop = "allowed type " + (++suffix);
-            }
-            parms.dom["fileUpload"].setAllowedTypes(types);
-            parms.dom["fileUpload"].render();
-            // If it wasn't already added, override the default drop behavior
-            // for screens using this widget. By default the browser will open
-            // the dropped page and navigate away. Prevent that.
-            if (!pui["fileUploadDND"].myPreventDefAdded) {
-                // For old IE, don't add listener, because drag/drop isn't even supported.
-                if (window.addEventListener) {
-                    window.addEventListener("dragover", pui["fileUploadDND"].myPreventDef, false);
-                    window.addEventListener("drop", pui["fileUploadDND"].myPreventDef, false);
-                }
-                pui["fileUploadDND"].myPreventDefAdded = true;
-            }
-        },
-        //end field type.
+if (!pui.fileUploadElements) {
+    pui.fileUploadElements = [];
+}
 
-        "auto submit": function (parms) {
-            if (parms.design)
-                return;
-            parms.dom["fileUpload"].setAutoSubmit(parms.value);
-        },
-        "auto upload": function (parms) {
-            if (parms.design)
-                return;
-            parms.dom["fileUpload"].setAutoUpload(parms.value);
-        },
-        "number of files": function (parms) {
-            if (parms.design)
-                return;
-            parms.dom["fileUpload"].setFileLimit(parseInt(parms.value, 10));
-        },
-        "size limit": function (parms) {
-            if (parms.design)
-                return;
-            parms.dom["fileUpload"].setSizeLimit(parseInt(parms.value, 10));
-        },
-        "target directory": function (parms) {
-            if (parms.design)
-                return;
-            parms.dom["fileUpload"].setTargetDirectory(trim(parms.value));
-        },
-        "rename to": function (parms) {
-            if (parms.design)
-                return;
-            parms.dom["fileUpload"].setAltName(trim(parms.value));
-        },
-        "overwrite files": function (parms) {
-            if (parms.design)
-                return;
-            parms.dom["fileUpload"].setOverwrite(parms.value);
-        },
-        "onupload": function (parms) {
-            if (parms.design)
-                return;
-            parms.dom["fileUpload"].setUploadEvent(parms.newValue);
-        },
-        // Only called when property is set or removed.
-        "disabled": function (parms) {
-            if (parms.design)
-                return;
-            parms.dom["fileUpload"].setDisabled(parms.value);
-        }
-    }
-}); //end of call to pui.widgets.add().
-
-
-pui.toolbox.add({
-    category: "Custom Widgets",
-    widget: "file upload vog",
-    text: "File Upload (VOG)",
-    icon: "/profoundui/proddata/images/icons/page_white_get.png",
-    cls: "widget-node",
-    proxyHeight: 252,
-    proxyWidth: 300,
-    proxyHTML: '<img src="/profoundui/proddata/images/fileuploadDND.png" style="height: 252px; width: 300px;">',
-    leaf: true,
-    defaults: {}
-});
-
-
-pui["fileUploadVOG"] = {};
-
-pui["fileUploadVOG"].FileUpload = function (container) {
+/**
+ * File Upload Class.
+ * 
+ * File created by: Kerim Güney.
+ * Based on Matthew Denninghoff's work.
+ * Date created: 2018-01-24.
+ * 
+ * Limitations: This widget will not work with IE versions less than 10 or
+ * with Microsoft Edge (as of 11/4/15).
+ * 
+ * Required by obfuscator:
+ * @constructor
+ * @param {Object} container
+ * @returns {undefined}
+ */
+pui["fileUploadVog"].FileUpload = function (container) {
     // Private fields.
     var me = this; // alias used for on-event handlers with different "this" pointer.
     var mainBox = container;
-    var postAction = getProgramURL("PUI0009109.PGM");
+    var postAction = '';
 
     var dropBox; // drop target.
     var controlBox; // holds the "Start Upload" and "Clear" links.
@@ -393,6 +298,8 @@ pui["fileUploadVOG"].FileUpload = function (container) {
 	 */
     this.upload = function () {
 
+        postAction = window.getProgramURL("PUI0009109.PGM");
+
         // Prevent upload if error exists; e.g. last upload failed, but user clicked submit again.
         if (error.length > 0) return;
 
@@ -427,14 +334,11 @@ pui["fileUploadVOG"].FileUpload = function (container) {
             formData.append('flimit', fileLimit);
             formData.append('slimit', sizeLimit);
             formData.append('dir', targetDirectory);
-
             formData.append('altname', (fileLimit > 1 ? "" : altName));
-
             formData.append('overwrite', (overwrite ? "1" : "0"));
             // For each file in our list, put it into the FormData object.
             for (var i = 0; i < selectors.length; i++) {
-                formData.append('file_' + i, selectors[i])
-                formData.append('file_' + i + '_altname', new Date().getTime());
+                formData.append('file', selectors[i]);
             }
 
             // Note: we can skip sending the MIME type since we validated it
@@ -1137,32 +1041,187 @@ pui["fileUploadVOG"].FileUpload = function (container) {
     }
 
 };
+// end of pui["fileUpload"].FileUpload().
 
-pui["fileUploadVOG"].myPreventDef = function (e) {
+
+/******************************************************************************/
+// Note: The functions pui.processUpload() and pui.checkUploads() are defined in file_upload.js.
+
+
+/******************************************************************************/
+/*
+ * pui.widgets.add() gets called when a Genie or Rich UI session begins.
+ * Defines the widget and its default parameters.
+ * Certain events are defined to handle when the widget is added, changed, or
+ * loaded in a screen.
+ *
+ * http://www.profoundlogic.com/docs/pages/viewpage.action?pageId=5275778
+ */
+pui.widgets.add({
+    /* Field type name of the widget. Must match the "widget" property in designer/Toolbox.js. */
+    name: "file upload vog",
+    /* Prefix for the id property of a newly added file upload widget; e.g. "FileUploadDND1" becomes the id. */
+    newId: "FileUploadVog",
+    /* Appears atop the Properties menu when a widget of this type is selected. */
+    menuName: "File Upload Vog",
+    defaults: {
+        /* Default properties for a newly added widget of type "file upload dnd". */
+        width: "300px",
+        height: "252px",
+        /* Use the same CSS as "file upload" widget. */
+        "css class": "pui-file-upload",
+        "size limit": "10",
+        "number of files": "1",
+        "overwrite files": "false"
+    },
+	/* Property-setter functions are called when the named property is set or
+	 * removed. Each are also called when the page loads or is refreshed ONLY IF
+	 * the property is set (unless noted otherwise below).
+	 * 
+	 * The parameter, parms.design, is true when the page is Visual Designer
+	 * and when design mode is On for Genie.
+	 * 
+	 * I put validation code in the setter functions instead of these handlers. MD.
+	 */
+    propertySetters: {
+        /* The "field type" function calls the widget constructor and render(). */
+        "field type": function (parms) {
+			/*
+			 * If we haven't already constructed an instance of FileUpload, do it now.
+			 * dom["fileUpload"] is a property of our mainBox, not of window.pui.
+			 * runtime/dspf/render.js requires a "fileUpload" property, so we must use the exact string.
+			 * pui["fileUpload"] is the old file_upload widget, so we use a
+			 * different string on window.pui to avoid overwriting the other widget's class.
+			 * 
+			 * .dom["fileUpload"] is undefined on a new page load or after pui.submitReponse();
+			 * i.e. in RichUI when screen/record-format changes.
+			 */
+            if (parms.dom["fileUpload"] === undefined) {
+                parms.dom["fileUpload"] = new pui["fileUploadVog"].FileUpload(parms.dom);
+
+                // This pushes our widget instance onto the global list of 
+                // file upload widgets. When a submit happens, each widget's
+                // upload() function will be called.
+                if (context === "dspf")
+                    pui.fileUploadElements.push(parms.dom["fileUpload"]);
+            }
+            // Process multiple occurence property.
+            var suffix = 1;
+            var prop = "allowed type";
+            var types = [];
+            while (typeof (parms.properties[prop]) === "string") {
+                types.push(parms.evalProperty(prop));
+                prop = "allowed type " + (++suffix);
+            }
+            parms.dom["fileUpload"].setAllowedTypes(types);
+            parms.dom["fileUpload"].render();
+            // If it wasn't already added, override the default drop behavior
+            // for screens using this widget. By default the browser will open
+            // the dropped page and navigate away. Prevent that.
+            if (!pui["fileUploadVog"].myPreventDefAdded) {
+                // For old IE, don't add listener, because drag/drop isn't even supported.
+                if (window.addEventListener) {
+                    window.addEventListener("dragover", pui["fileUploadVog"].myPreventDef, false);
+                    window.addEventListener("drop", pui["fileUploadVog"].myPreventDef, false);
+                }
+                pui["fileUploadVog"].myPreventDefAdded = true;
+            }
+        },
+        //end field type.
+
+        "auto submit": function (parms) {
+            if (parms.design)
+                return;
+            parms.dom["fileUpload"].setAutoSubmit(parms.value);
+        },
+        "auto upload": function (parms) {
+            if (parms.design)
+                return;
+            parms.dom["fileUpload"].setAutoUpload(parms.value);
+        },
+        "number of files": function (parms) {
+            if (parms.design)
+                return;
+            parms.dom["fileUpload"].setFileLimit(parseInt(parms.value, 10));
+        },
+        "size limit": function (parms) {
+            if (parms.design)
+                return;
+            parms.dom["fileUpload"].setSizeLimit(parseInt(parms.value, 10));
+        },
+        "custom target directory": function (parms) {
+            if (parms.design)
+                return;
+            parms.dom["fileUpload"].setTargetDirectory(trim(parms.value));
+        },
+        "rename to": function (parms) {
+            if (parms.design)
+                return;
+            parms.dom["fileUpload"].setAltName(trim(parms.value));
+        },
+        "overwrite files": function (parms) {
+            if (parms.design)
+                return;
+            parms.dom["fileUpload"].setOverwrite(parms.value);
+        },
+        "onupload": function (parms) {
+            if (parms.design)
+                return;
+            parms.dom["fileUpload"].setUploadEvent(parms.newValue);
+        },
+        // Only called when property is set or removed.
+        "disabled": function (parms) {
+            if (parms.design)
+                return;
+            parms.dom["fileUpload"].setDisabled(parms.value);
+        }
+    }
+}); //end of call to pui.widgets.add().
+
+/*
+	Prevent a dropped file from becoming the new page.
+	http://stackoverflow.com/questions/6756583/prevent-browser-from-loading-a-drag-and-dropped-file
+	Required for Firefox, Chrome, and IE11, IE10, .
+*/
+pui["fileUploadVog"].myPreventDef = function (e) {
     e = e || event;
     e.returnValue = false;
     if (e.preventDefault)
         e.preventDefault();
 };
 // Flag to avoid adding redundant window listeners.
-pui["fileUploadVOG"].myPreventDefAdded = false;
+pui["fileUploadVog"].myPreventDefAdded = false;
 
-function getProgramURL(program, psid, useAuth) {
+pui.toolbox.add({
+    category: "Custom Widgets",
+    widget: "file upload vog",
+    text: "File Upload (VOG)",
+    icon: "/profoundui/proddata/images/icons/page_white_get.png",
+    cls: "widget-node",
+    proxyHeight: 252,
+    proxyWidth: 300,
+    proxyHTML: '<img src="/profoundui/proddata/images/fileuploadDND.png" style="height: 252px; width: 300px;">',
+    leaf: true,
+    defaults: {}
+});
 
-    var auth = false;
-    var loc = location.href;
-    loc = loc.split("?")[0];
-    var parts = loc.split("/");
-    if (parts.length > 2 &&
-        parts[parts.length - 2].toLowerCase() == "auth") {    // && parts[parts.length - 3].toLowerCase() == "profoundui") {
-        auth = true;
+var customProperties = [
+    {
+        name: "custom uploaded",
+        type: "boolean",
+        help: "",
+        controls: ["file upload vog"],
+        category: "Custom File Upload",
+    },
+    {
+        name: "custom target directory",
+        type: "long",
+        help: "",
+        controls: ["file upload vog"],
+        category: "Custom File Upload",
     }
+]
 
-    var url = "/profoundui/";
-    if (auth == true || useAuth == true) url += "auth/";
-    url += program;
-    if (psid != null && psid == true) url += "/" + PSID;
-    if (pui["serverURL"] != null) url = pui["serverURL"] + url;
-    return url;
-
-}
+customProperties.forEach(function (property) {
+    pui.addCustomProperty(property);
+})
