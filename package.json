@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "dataurl": "^0.1.0",
-    "profoundjs": "^4.2.3",
+    "profoundjs": "^4.2.4",
     "tesseract.js": "^1.0.10",
     "watson-developer-cloud": "^3.0.6"
   }
