@@ -1,0 +1,16 @@
+.wrap,
+.ocr_page,
+.ocr_carea {
+  white-space: normal !important;
+}
+
+.ocr_result {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  font-size: 1.5em;
+}
+
+body {
+  overflow: hidden !important;
+}
