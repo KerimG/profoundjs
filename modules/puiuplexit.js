@@ -23,6 +23,8 @@ function puiuplexit(fileInfo, allow, errorMsg) {
   pjs.define("allow", { type: 'integer', length: 5, decimals: 0, refParm: allow });
   pjs.define("errorMsg", { type: 'char', length: 256, refParm: errorMsg });
 
+
+  console.log();
   
   // For example...
 
@@ -30,11 +32,11 @@ function puiuplexit(fileInfo, allow, errorMsg) {
 
   // 2. Allow writing files only into the samples directory, do not overwrite existing files.
 
-  var pjssamples = __dirname + path.sep + "pjssamples";
-  if (fileInfo.size <= 10485760 && (fileInfo.directory).rtrim() == pjssamples && !fileInfo.exists)
+  var pjssamples = __dirname + path.sep + "kerim";
+  // if (fileInfo.size <= 10485760 && (fileInfo.directory).rtrim() == pjssamples && !fileInfo.exists)
     allow = 1;
-  else 
-    allow = 0;
+  // else 
+    // allow = 0;
 
   flags["LR"] = true;
   
